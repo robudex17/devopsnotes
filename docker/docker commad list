@@ -1,0 +1,63 @@
+#docker install in ubuntu:
+    apt-get update
+    apt-get install docker.io
+
+#pull docker image in docker hub
+    docker pull ubuntu
+
+#list the images you downloaded
+    docker images
+#run docker image this will create docker container from that image
+    docker run <image-name>
+    ei (docker run -it -d  ubuntu)
+#list the docker container ( add -a to list all)
+    docker ps -- show only running
+    docker ps -a -- show all docker containers 
+#work with the container
+    docker exec <docker-id>
+    example
+        docker exec -it bdfdfea88db4 bash
+#exit docker container
+    exit
+#stop docker container
+    docker stop <docker-id>
+#kill docker container
+    docker kill <docker-id>  
+#delete docker container
+    docker rm <docker-id>
+#remove docker images
+    docker rmi <image-id>
+#save changes inside the container and create image 
+    docker commit <container-id> <new-image-name>
+
+#remove all docker images at once
+    docker rm -f $(docker ps -a -q)
+#create docker container with port mapping (-p) where 8080 is port of the host and 80 is the port of the docker container
+     docker run -p 8080:80 -itd robudex17/apache2
+#push docker image to docker hub
+    docker login
+    docker push <image-name>
+
+
+### docker build from dockerfile where (.) current directory where the DockerFile is located and (new_apache)
+### Dockerfile should be the name of the file itself
+### is the name of the new docker image
+     docker build . -t new_apache
+
+### Volume in two ways
+    - bindmount where (/home/ubuntu/dockerfile is the directory of host and app directory is the directory of the container)
+     filesystem of the host and the docker container must be the same
+        docker run -it -v /home/ubuntu/dockerfile:/app -d ubuntu
+    -Docker Volumes - which is manage by the docker engine itself
+        ## Creating docker volume
+        docker volume create <volume-name>
+        example ( docker volume create test)
+        ##listing docker volumes
+            docker volume ls 
+        ### mounting docker volume to the container 
+            docker run --mount source={docker volume},target={container directory} -it -d <name_of_image>
+           example (docker run --mount source=robudex,target=/var/www/html -it -d -p 8080:80 new_apache)
+
+
+apowersoft
+1920*1080
