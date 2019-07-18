@@ -58,6 +58,19 @@
             docker run --mount source={docker volume},target={container directory} -it -d <name_of_image>
            example (docker run --mount source=robudex,target=/var/www/html -it -d -p 8080:80 new_apache)
 
+### Docker Swarm - container Orchestration
+        is a clustering and shceduling tool for Docker containers
+     On the leader-node
+        where addr=172.31.89.72 is the leader node IP Add
+         docker swarm init --advertise-addr=172.31.89.72
+    On the workder-node paste the  join token
+        docker swarm join --token SWMTKN-1-5c9pwyeexailg9sz7fxi4zffhmvojwmvxgllflrsfz66jeysoy-0z3ejpmiuyf6p1nt709jrdkhu 172.31.89.72:2377
+
+###Leave docker swarm   
+    docker swarm leave
+###create service
+    where robudex17/apache2 is the name of the docker image
+    docker service create --name apache --replicas 5 -p 8080:80 robudex17/apache2
 
 apowersoft
 1920*1080

@@ -1,0 +1,10 @@
+devops - is not a applicaiton rather a modern idea that solve the issues bet 
+         developers and operations and to improve collaboration 
+       - to make it possible devops idea use a tons of tools like:
+            
+
+Continous Development  -- tools use (git,svn)
+Continous Integration --- tool used (Jenkins)
+Continous Deployment ---- Docker for Virtualization and Containerization  Puppet and Ansible for Configuration Management
+Continous Testing    ---- tool used Selenium 
+Continous Monitoring ---- tool used Nagios

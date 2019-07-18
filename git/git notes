@@ -1,0 +1,20 @@
+Git -- version controll system
+
+1. Creating Repository
+    - git init
+git status -- get the status of
+git add -- so git track the changes
+git commit  -m "my first commit" -- to commit
+git remote add origin "github repo" --- add remote repository
+git push origin master -- to push to remote repository
+git clone "github url"
+git pull < github url"
+git branch <new branch>
+git branch -D  <name of the branch>
+git checkout <branch name> -- to switch branch
+git log --- list of all commit
+git stash --- save without committing the code
+git stash pop
+git revert < commit-id> 
+git diff <commit-id of version x > <commit-id of version y> 
+git diff HEAD . -- comparing the commit and the current directory
