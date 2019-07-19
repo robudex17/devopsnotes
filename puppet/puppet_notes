@@ -1,0 +1,58 @@
+Puppet 
+    - open-source software configuration management tool
+    - used its own declaritive syntax
+    - pull management type
+    - Puppet Master /Puppet Archictecture
+    - use SSL connection
+
+Setting up Puppet (Master/Slave)
+
+Master Settings
+    - apt-get update
+    - apt-get install wget
+    - wget https://apt.puppetlabs.com/puppet-release-bionic.deb
+    - dpkg -i puppet-release-bionic.deb
+    - apt-get install puppetmaster
+    - systemctl status puppet-master.service
+    - vim /etc/default/puppet-master
+        -- JAVA_ARGS="-Xms512 -Xmx512"
+    - systemctl restart puppet-master.service
+     ufw allow 8140/tcp
+
+
+     Restart puppetmaster after the change
+
+Slave Settings
+    - apt-get update
+    - apt-get install wget
+    - wget https://apt.puppetlabs.com/puppet-release-bionic.deb
+    - dpkg -i puppet-release-bionic.deb
+    - apt-get install puppet
+    - systemctl start puppet
+    - systemctl enable puppet
+
+On master
+    puppet cert list ------------------ list or view puppet agent cert
+    puppet cert sign --all ------------ sign all cert
+
+Manifest - a collection of resource declarations, using the extension .pp
+
+Creating Maninfest
+     mkdir -p /etc/puppet/code/environments/production/manifests
+     create (file site.pp)
+
+site.pp file content
+    node_default{
+        package { 'nginx':
+            ensure => installed,
+        }
+        file {'/tmp/status.txt':
+            content => 'Nginx installed'
+            mode => '0644'
+        }
+    }
+
+puppet code basic sample
+    package { 'nginx'
+        ensure => 'installed'
+    }

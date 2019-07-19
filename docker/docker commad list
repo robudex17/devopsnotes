@@ -60,6 +60,7 @@
 
 ### Docker Swarm - container Orchestration
         is a clustering and shceduling tool for Docker containers
+        cannot work with single machine
      On the leader-node
         where addr=172.31.89.72 is the leader node IP Add
          docker swarm init --advertise-addr=172.31.89.72
@@ -71,6 +72,10 @@
 ###create service
     where robudex17/apache2 is the name of the docker image
     docker service create --name apache --replicas 5 -p 8080:80 robudex17/apache2
+
+#### scale up or down 
+    where 2 is the number of task (make lower to scale down and greater if scale up)
+    docker service scale apache=2
 
 apowersoft
 1920*1080
