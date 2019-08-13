@@ -1,0 +1,143 @@
+---
+#host
+- hosts: localhost
+  # Declare variables for ubuntu distribution 
+  vars:
+    asterisk_version: 16
+    asterisk_path_tar_name: asterisk-16.5.0
+    asterisk_configure_options: --with-pjproject-bundled
+
+    _asterisk_url_wget: http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-{{ asterisk_version }}-current.tar.gz
+    _asterisk_wget_path: /tmp/
+    _asterisk_path: '{{ _asterisk_wget_path }}{{ asterisk_path_tar_name }}/'
+
+    _asterisk_create_files:
+      - path: '{{ _asterisk_path }}'
+        state: directory
+
+    _asterisk_script_dependences: ./contrib/scripts/install_prereq install
+
+    _asterisk_package_dependencies:
+      - build-essential
+      - git-core
+      - subversion
+      - libjansson-dev
+      - sqlite
+      - autoconf
+      - automake
+      - libxml2-dev
+      - libncurses5-dev
+      - python-pexpect
+
+    _asterisk_scripts:
+      - ./bootstrap.sh
+      - ./configure
+
+    _asterisk_makes:
+      - make
+      - make install
+      - make samples
+      - make config
+      - make install-logrotate
+
+  # Task for installing asterisk
+  tasks:
+    - name: Update package repositories
+      sudo: yes
+      apt:
+        update_cache: True
+
+    - name: Installing asterisk package dependencies
+      become: yes
+      package: 
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ _asterisk_package_dependencies }}"
+      tags: 
+        - packages
+        - dependencies
+
+    - name: unarchive package asterisk
+      become: true
+      unarchive: src="{{ _asterisk_url_wget }}" dest="{{ _asterisk_wget_path }}" remote_src=True
+      when:
+        - _asterisk_path is defined
+      register: asterisk_src_download
+
+   # - name: Let asterisk install dependencies
+   #   become: True
+   #   shell: "{{ _asterisk_script_dependences }} chdir={{ _asterisk_path }}"
+   #   when:
+   #     - _asterisk_script_dependences is defined
+   #     - ansible_distribution == "Ubuntu"
+
+    - name: Let asterisk install dependencies
+      become: true
+      expect:
+        echo: yes
+        chdir: "{{ _asterisk_path }}"
+        command: "{{ _asterisk_script_dependences }}"
+        timeout: 120
+        responses:
+          (.*)Do you want to continue?(.*): "Y"
+          (.*)ITU-T telephone code(.*): "63"
+
+    - name: Let asterisk execute scripts
+      become: true
+      command: "{{ item }} chdir={{ _asterisk_path }}"
+      with_items: "{{ _asterisk_scripts | default([]) }}"
+      when:
+        - _asterisk_scripts is defined
+      
+    - name: Download mp3 source code
+      become: true
+      command: ./contrib/scripts/get_mp3_source.sh chdir={{ _asterisk_path }} creates=addons/mp3/mpg123.h
+
+    - name: Configure asterisk
+      become: true
+      command: ./configure {{ asterisk_configure_options }} chdir={{ _asterisk_path }}
+
+    - name: Create menuselect.makeopts
+      become: true
+      command: make menuselect.makeopts chdir={{ _asterisk_path }}
+
+    - name: Do a bit of menuselect configuration
+      become: true
+      command: "{{ item }} chdir={{ _asterisk_path }}"
+      with_items:
+        - menuselect/menuselect --enable format_mp3
+        - menuselect/menuselect --enable CORE-SOUNDS-EN-WAV --enable CORE-SOUNDS-EN-G722
+        - menuselect/menuselect --enable EXTRA-SOUNDS-EN-GSM --enable EXTRA-SOUNDS-EN-WAV --enable EXTRA-SOUNDS-EN-G722
+        - menuselect/menuselect --disable MOH-OPSOUND-WAV --disable MOH-OPSOUND-GSM --disable MOH-OPSOUND-G722
+
+    - name: Execute makes
+      become: true
+      command: "{{ item }} chdir={{ _asterisk_path }}"
+      with_items: "{{ _asterisk_makes | default([]) }}"
+      when:
+        - _asterisk_makes is defined
+      notify: restart asterisk
+
+    - name: Change permission path asterisk
+      become: true
+      file: dest={{ asterisk_path_run }} owner={{ asterisk_user }} recurse=yes
+      when:
+        - _asterisk_path_run is defined
+        - _asterisk_user is defined
+
+    - name: Install asterisk dependencies
+      become: true
+      apt: name="{{ item }}" state=present update_cache=yes
+      with_items: "{{ _asterisk_packages | default([]) }}"
+      when:
+        - _asterisk_packages is defined
+      tags:
+        - asterisk
+  handlers:
+    - name: restart asterisk
+      become: True
+      service: name=asterisk state=restarted
+    - name: reload asterisk
+      become: True
+      service: name=asterisk state=reloaded
+

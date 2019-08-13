@@ -1,0 +1,73 @@
+- agent-less
+- build on top of python
+- use ssh
+- Push Based arch (puppet and chef are pull based )
+- Used Playbook (which used yaml)
+- Development + Operations
+
+How To Install
+    - apt-get update
+    - apt-get install software-properties-common
+    - apt-add-repository ppa:ansible/ansible
+    - apt-get update
+    - apt-get install ansible
+
+
+    
+
+Ansible Roles:
+ making Roles for Apache
+ ansible-galaxy init apache --offline ------making template role
+
+ Component of a Role: (Apache)
+ 1. defaults = Data about the role / application. Default variables  
+ 2. files = static files are stored here which been copied to remote machine
+ 3. handlers = Tasks which are based on some actions. Triggers
+      example ( in case httpd.conf changes , it should trigger server restart) 
+ 4. meta = tells about the roles, like the authors of the roles, supported plattforms, Dependencies if any
+ 5. tasks = Core logic are stored here, like Installaing packages, coping files etc
+ 6. templates = Similar to files except that templates support  dynamic files
+     file  Jinja2 - template language
+ 7. vars = Both vars and defaults stores variable. Variables stored  under "vars " has the higher priority and  
+            difficult to override.
+
+
+  To see the 'raw' information as gathered
+    ansible hostname -m setup          
+
+
+##### Ansible expect
+- name: expect example
+  expect:
+    echo: yes
+    chdir: "{{ dir }}"
+    command: "./{{ exectuable_filename }}"
+    timeout: "{{ timeout }}"
+    responses:
+      (.*)Please enter your name(.*): "Fred"
+      (.*)Please enter your age(>*): "37"
+      (.*)db port(.*): "{{ db_port }}"
+      (.*)db user(.*): "{{ db_user }}"
+      (.*)db pass(.*): "{{ db_pass }}"
+    register: expect_example_result
+    failed_when: "expect_example_result.rc != 0 and 'Success' not in expect_example_result.stdout"
+
+####Find and replace text in script
+    sed -i -e 's/asteriskver/asterisk-16.5.0/g' test.txt
+
+
+###ansible get ipv4
+
+  "ansible_default_ipv4": {
+            "address": "172.31.88.128",
+            "alias": "eth0",
+            "broadcast": "172.31.95.255",
+            "gateway": "172.31.80.1",
+            "interface": "eth0",
+            "macaddress": "12:2a:22:63:33:2e",
+            "mtu": 9001,
+            "netmask": "255.255.240.0",
+            "network": "172.31.80.0",
+            "type": "ether"
+        },
+

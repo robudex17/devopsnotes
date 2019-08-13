@@ -5,6 +5,10 @@ Puppet
     - Puppet Master /Puppet Archictecture
     - use SSL connection
 
+You'll use Puppet's declarative language to describe the desired state of your system in files called manifests.
+ Manifests describe how your network and operating system resources, such as files, packages, and services,
+  should be configured. Puppet then compiles those manifests into catalogs, which across your infrastructure.
+
 Setting up Puppet (Master/Slave)
 
 Master Settings
@@ -36,7 +40,11 @@ On master
     puppet cert sign --all ------------ sign all cert
 
 Manifest - a collection of resource declarations, using the extension .pp
-
+Three Component
+    - Variables
+    - Loops
+    - Conditions
+Manifests are a basic building block of Puppet and are kept in a specific file structure called a module.
 Creating Maninfest
      mkdir -p /etc/puppet/code/environments/production/manifests
      create (file site.pp)

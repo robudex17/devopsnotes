@@ -1,0 +1,130 @@
+[general]
+static=yes
+writeprotect=no
+autofallthrough=yes
+clearglobalvars=no
+priorityjumping=no
+
+[globals]
+
+#include /etc/asterisk/extensions.d/CountryManagers.conf
+#include /etc/asterisk/extensions.d/jpdc97.conf
+
+[default]
+include => sbtph-poweruserwithcallspy
+include => callme
+
+#include /etc/asterisk/extensions.d/macro.conf
+#include /etc/asterisk/extensions.d/inbound.conf
+#include /etc/asterisk/extensions.d/outbound.conf
+#include /etc/asterisk/extensions.d/utilities.conf
+
+[sbtph]
+include => sbt-internal-ext
+include => international
+include => local-pstn
+include => NDD-pstn
+
+#include /etc/asterisk/extensions.d/callforward.conf
+
+[sbtph-special]
+include => lcr
+include => sbtph-poweruser
+
+
+[lcr]
+exten => _876X.,1,Dial(IAX2/sbphilippines:sB72Ad!n6@211.0.128.99/0${EXTEN:3},60,TtWw)
+
+[sbtph-poweruser]
+include => PLDT-SpecialNumbers
+include => sbt-internal-ext
+include => local-pstn
+include => NDD-pstn
+include => international
+include => record-utility
+include => call-spy
+include => freswitch_users
+
+
+exten => _63XX,1,Dial(SIP/${EXTEN},60,TtWw)
+exten => _63XX,n,Hangup
+
+;exten => _X.,1,Dial(IAX2/sbphilippines:sB72Ad!n6@61.197.229.146/${EXTEN},60,TtWw)
+
+;exten => 9603,1,Dial(IAX2/sbpakistan:sbtrading@125.209.91.27/${EXTEN},60,TtWw)
+
+
+[sbtph-poweruserwithcallspy]
+include => call-spy
+include => PLDT-SpecialNumbers
+include => sbt-internal-ext
+include => local-pstn
+include => NDD-pstn
+include => international
+
+exten => _63XX,1,Dial(SIP/${EXTEN},60,TtWw)
+exten => _63XX,n,Hangup
+
+
+
+[record-utility]
+exten => 123,1,Record(/var/lib/asterisk/sbtparts/ivr/parts-welcome-msg.wav)
+exten => 123,n,Playback(/var/lib/asterisk/sbtparts/ivr/parts-welcome-msg)
+exten => 123,n,Hangup()
+
+exten => 124,1,Record(/var/lib/asterisk/sbtparts/ivr/test.wav)
+exten => 124,n,Playback(/var/lib/asterisk/sbtparts/ivr/test)
+exten => 124,n,Hangup()
+
+[for-demo]
+exten => s,1,Dial(IAX2/demoph:sdf123@192.168.70.3/7000,60,TtWw)
+exten => s,n,Hangup
+
+[demo-out]
+exten => _XXXXXXX,1,Dial(ZAP/g1/${EXTEN},60,TtWwo)
+exten => _XXXXXXX,n,Hangup()
+
+[test]
+exten => _.,1,NoOp(Called Number = ${EXTEN})
+exten => _.,n,Hangup
+
+[PLDT-Carrier]
+
+; Local Call (since we are located in manila)
+exten => _632XXXXXXX,1,Dial(DAHDI/r0/${EXTEN:3},60,o)
+exten => _632XXXXXXX,n,Hangup
+
+; NDD
+exten => _63NXXXXXXXX,1,Dial(DAHDI/r0/0${EXTEN:2},60,o)
+exten => _63NXXXXXXXX,n,Hangup
+
+; Mobile
+exten => _639XXXXXXXXX,1,Dial(DAHDI/r0/0${EXTEN:2},60,o)
+exten => _639XXXXXXXXX,n,Hangup
+
+; International
+;exten => _X.,1,Dial(DAHDI/r0/00${EXTEN},60,o)
+;exten => _X.,n,Hangup
+
+[test-lcr]
+exten => _X.,1,Set(CALLEDPARTY=${EXTEN})
+same => n,Set(CALLERIP="121.97.241.162")
+same => n,Set(CALLINGPARTY=${CALLERID(num)})
+same => n,Set(REC_FILENAME=${CALLEDPARTY}-${CALLINGPARTY}.wav)
+same => n,AGI(c2dial_sbt-LCR.php,${CALLEDPARTY},${CALLERIP},1,${REC_FILENAME})
+
+exten => 123456,1,Verbose(2, Get Gomi extension from php file)
+same => n,Answer()
+same => n,Set(GOMIEXTEN=${CURL(http://192.168.71.250/test.php)})
+same => n,Dial(IAX2/sbphilippines:sB72Ad!n6@61.194.115.115/${GOMIEXTEN},60,TtWw0)
+same => n,Hangup()
+
+[freswitch_users]
+exten => 123456,1,Dial(SIP/${EXTEN}@freeswitch)
+
+
+
+[mytest]
+exten => 6336,1,Dial(SIP/${EXTEN},60,TtWw)
+exten =>6336,n,Hangup
+

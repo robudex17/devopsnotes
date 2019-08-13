@@ -1,0 +1,216 @@
+;exten => _3[5-6]XX,1,Dial(IAX2/sbt-srilanka:sbtrading@203.189.68.190/${EXTEN},60,TtWw)
+;        same => n,Hangup()
+
+exten => 6000,1,goto(dialcsd,s,1)
+
+exten => _23XX,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@
+61.194.115.115/,${EXTEN},0,,0,,0) 
+exten => _28XX,1,Macro(Dial,IAX2,sbt-hosted:sbtrading@208.55.221.46/,${EXTEN},0,,0,,0) 
+
+;exten => _8XXX,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; japan office extension numbers
+exten => _8XXX,1,Set(CountryManager_Callee=${CURL(http://localhost/sbt/api/isCountryManager.php?path=/var/www/sbt/support_files/countrymanagers.list&value=${EXTEN})})
+	same => n,GotoIf($["${CountryManager_Callee}" = "ERROR"]?drop)
+	same => n,Set(CountryManager_Caller=${CURL(http://localhost/sbt/api/isCountryManager.php?path=/var/www/sbt/support_files/countrymanagers.list&value=${CALLERID(num)})})
+	same => n,GotoIf($[$["${CountryManager_Callee}" = "1"] | $["${CountryManager_Caller}" = "1"]]?record_call:dont_record)
+	same => n(record_call),GotoIf($[$["${CALLERID(num)}" = "09035031733"] | $["${CALLERID(num)}" = "819035031733"] | $["${CALLERID(num)}" = "8501"]]?dont_record)
+	same => n,Set(DialString_Base=IAX2/E2E-AllCountry:sbtr4d1ng32M@211.0.128.97)
+	same => n,Goto(DialExten)
+	same => n(dont_record),Set(DialString_Base=IAX2/sbphilippines:sB72Ad!n6@61.194.115.115)
+	same => n(DialExten),Dial(${DialString_Base}/${EXTEN},60,TtWwo)
+	same => n(drop),Hangup()
+
+exten => 8243,1,Dial(IAX2/sbphilippines:sB72Ad!n6@61.194.115.115/${EXTEN},60,TtWw)
+
+exten => 8107,1,Dial(SIP/${EXTEN},60,TtWw) 
+exten => 8107,n,Hangup
+
+;exten => 8463,1,Dial(SIP/${EXTEN},60,TtWw)
+;	same => n,Hangup()
+
+exten => _65XX,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; singapore office extension numbers
+
+
+;exten => _9XXX,1,Dial(IAX2/pkext:sbtrading@202.141.249.148/${EXTEN},60,TtWw) ; new 1 pakistan office numbers
+;exten => _9XXX,n,Dial(IAX2/pkext:sbtrading@202.141.249.149/${EXTEN},60,TtWw) ; new 1 pakistan office numbers
+
+;exten => _9XXX,1,Dial(IAX2/pkext:sbtrading@110.93.214.181/${EXTEN},60,TtWw) ; new 1 pakistan office numbers
+;exten => _9XXX,n,Dial(IAX2/pkext:sbtrading@110.93.214.182/${EXTEN},60,TtWw) ; new 1 pakistan office numbers
+
+;exten => _9XXX,1,Dial(IAX2/interoffice:sbtrading@202.141.249.146/${EXTEN},60,TtWw) ; new 1 pakistan office numbers
+
+;exten => _9XXX,1,Dial(IAX2/sbphilippines:sB72Ad!n6@61.194.115.115/${EXTEN},60,TtWw) ; new 1 pakistan office numbers
+exten => _9XXX,1,Dial(IAX2/pkext:sbtrading@211.0.128.97/${EXTEN},60,TtWw) ; new 1 pakistan office numbers
+
+;exten => _9XXX,1,Dial(IAX2/pkext:sbtrading@125.209.124.214/${EXTEN},60,TtWw) ; new 1 pakistan office numbers
+;exten => _9XXX,1,Dial(IAX2/pkext:sbtrading@110.93.214.181/${EXTEN},60,TtWw) ; new 1 pakistan office numbers
+;exten => _9XXX,1,Dial(IAX2/pkext:sbtrading@125.209.124.212/${EXTEN},60,TtWw); new 2 pakistan office extension number
+;exten => _9XXX,n,Dial(IAX2/oldpkserver:sbtrading@125.209.98.198/${EXTEN},60,TtWw) ; old pakistan office numbers
+
+
+;exten => 9,1,Dial(IAX2/newpkserver2:sbtrading@125.209.124.212/03448002274,60,TtWw)
+;exten => 12345,1,Dial(IAX2/newpkserver2:sbtrading@125.209.124.212/12345,60,TtWw)
+
+;exten => _9XXX,1,Dial(IAX2/newpkserver2:sbtrading@110.93.214.178/${EXTEN},60,TtWw) ; new 1 pakistan office extension numbers
+;exten => _9XXX,n,Dial(IAX2/newpkserver1:sbtrading@110.93.214.181/${EXTEN},60,TtWw); new 2 pakistan office extension number
+;exten => _9XXX,n,Dial(IAX2/oldpkserver:sbtrading@125.209.98.198/${EXTEN},60,TtWw) ; old  pakistan office extension numbers
+
+exten => _20XX,1,Dial(IAX2/sbtkyrgyzstan:kyrgyzstan2012@176.123.230.134/${EXTEN},60,TtWw)   
+exten => _21XX,1,Dial(IAX2/sbtkyrgyzstan:kyrgyzstan2012@176.123.230.134/${EXTEN},60,TtWw)
+
+
+; MONGOLIA OFFICE
+exten => 2202,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.4.163/${EXTEN},60,TtWw)
+        same => n,Hangup()
+
+exten => 2218,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.4.163/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+exten => 2221,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.4.163/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+exten => 2235,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.4.163/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+exten => 2240,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.4.163/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+exten => 2241,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.4.163/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+exten => 2246,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.4.163/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+exten => 2256,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.4.163/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+	
+exten => _22XX,1,Dial(IAX2/sbtphilippines:mongoliaat2012@202.131.242.195/${EXTEN},60,TtWw)
+exten => _22XX,n,Hangup
+
+exten => _22XX,1,Dial(IAX2/sbtphilippines:mongoliaat2012@202.131.242.195/${EXTEN},60,TtWw)
+exten => _22XX,n,Hangup
+
+;exten => _24XX,1,Dial(IAX2/sbt-hosted:sbtrading@208.55.220.43/${EXTEN},60,TtWw)
+;exten => _24XX,n,Hangup
+
+exten => _27XX,1,Dial(IAX2/sbtnigeria:sbtrading@197.255.60.195/${EXTEN},60,TtWw)
+exten => _27XX,n,Hangup
+
+exten => _25XX,1,Dial(IAX2/sbphilippines:sB72Ad!n6@61.194.115.115/${EXTEN},60,TtWw)
+exten => _25XX,n,Hangup
+
+; Botswana
+exten => _42XX,1,Dial(IAX2/sbphilippines:sB72Ad!n6@61.194.115.115/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+; Dominican Republic
+exten => _42XX,1,Dial(IAX2/sbt-hosted:sbtrading@209.238.152.200/${EXTEN},60,TtWw)
+	same => n,Hangup
+
+exten => 9999,1,Dial(IAX2/sbphilippines:sB72Ad!n6@61.194.115.115/${EXTEN},60,TtWw)
+exten => 9999,n,Hangup
+
+exten => _1XXX,1,Dial(IAX2/sbmiamiusa:sbtrading@96.91.107.242/${EXTEN},60,TtWw)
+exten => 123456,1,Dial(IAX2/sbmiamiusa:sbtrading@96.91.107.242/${EXTEN},60,TtWw)
+
+
+;exten => _7XXX,1,Macro(Dial,IAX2,sbrussia:sbtrading@109.126.13.11/,${EXTEN},0,,0,,0) ; vladivostok office extension numbers
+exten => _7XXX,1,Macro(Dial,IAX2,sbrussia:sbtrading@86.102.84.66/,${EXTEN},0,,0,,0) ; vladivostok office extension
+;exten => _7XXX,1,Macro(Dial,IAX2,sbrussia:sbtrading@109.126.13.14/,${EXTEN},0,,0,,0) ; vladivostok office extension
+exten => _565[5-9],1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0)
+exten => _566[0-5],1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0)
+exten => _56XX,1,Macro(Dial,IAX2,sbchile:sbtrading@200.111.180.49/,${EXTEN},0,,0,,0) ;chile office extension numbers
+exten => _51XX,1,Macro(Dial,IAX2,sbperu:sbtrading@200.48.19.242/,${EXTEN},0,,0,,0) ; peru office extension numbers
+exten => _27XX,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; south africa office extension numbers
+exten => _59XX,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; paraguay office extension numbers
+exten => _9515X,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; bolivia office extension numbers
+
+exten => _25XX,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; kenya office extension numbers
+exten => _645X,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; new zealand office extension numbers
+exten => _915X,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; india office extension numbers
+exten => _2555X,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; tanzania office extension numbers
+
+exten => _840XX,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; homebased extension numbers
+exten => _8550XX,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; homebased extension numbers
+exten => 63049,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; eugene softphone extension numbers
+
+exten => 1234,1,Macro(Dial,IAX2,sbrussia:sbtrading@109.126.13.11/,${EXTEN},0,,0,,0) ; vladivostok office extension numbers
+exten => 2345,1,Macro(Dial,IAX2,sbrussia:sbtrading@109.126.13.11/,${EXTEN},0,,0,,0) ; vladivostok office extension numbers
+
+
+;uk-office
+exten => 44XXX,Dial(IAX2/interoffice:sbtrading@185.19.208.92,60,Tto)
+exten => 44XXX,Hangup()
+
+
+;benin-office
+exten => _40XX,1,Dial(IAX2/sbtnigeria:sbtrading@164.160.143.151/${EXTEN},60,TtWw)
+exten => _40XX,n,Hangup()
+
+;exten => 6339,1,Dial(IAX2/sbtnigeria:sbtrading@164.160.143.151/${EXTEN},60,TtWw)
+
+
+;exten => _40XX,1,Dial(IAX2/pkext:sbtrading@211.0.128.97/${EXTEN},60,TtWw)
+
+;exten => _52XX,1,Dial(IAX2/sbt-hosted:sbtrading@209.238.152.10/${EXTEN},60,TtWw)
+ ;       same => n,Hangup()
+
+
+exten => _52XX,1,Dial(IAX2/sbt-Georgia:sbtrading@178.134.213.42/${EXTEN},60,TtWw)
+        same => n,Hangup()
+exten => _53XX,1,Dial(IAX2/sbt-Georgia:sbtrading@178.134.213.42/${EXTEN},60,TtWw)
+        same => n,Hangup()
+
+
+;bangladesh-office
+exten => 8205,1,Dial(IAX2/sbt-hosted:sbtrading@211.0.128.99/${EXTEN},60,TtWw)
+        same => n,Hangup()
+
+;exten => _4[5-9]XX,1,Dial(IAX2/sbt-hosted:sbtrading@211.0.128.99/${EXTEN},60,TtWw)
+exten => _45XX,1,Dial(IAX2/sbt-bangladesh:sbtrading@115.127.74.98/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+
+;mexico office
+exten => _39XX,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.161.148/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+;chile office
+exten => 8013,1,Dial(IAX2/sbt-hosted:sbtrading@209.238.152.83/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+exten => _56XX,1,Dial(IAX2/sbt-hosted:sbtrading@209.238.152.83/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+exten => 2461,1,Dial(IAX2/sbt-hosted:sbtrading@209.238.152.83/${EXTEN},60,TtWw)
+	same => n,Hangup()
+
+;srilanka office
+;exten =>_ 35XX,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.24.131/${EXTEN},60,TtWw)
+;        same => n,Hangup()
+
+;exten =>_ 36XX,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.24.131/${EXTEN},60,TtWw)
+;        same => n,Hangup()
+
+exten => _3[5-6]XX,1,Dial(IAX2/sbt-srilanka:sbtrading@122.255.12.181/${EXTEN},60,TtWw)
+        same => n,Hangup()
+
+
+
+;exten => _24XX,1,Dial(IAX2/E2E-Japan:sbtr4d1ng32M@211.0.128.97/${EXTEN},60,TtWw)
+;same => n,Hangup
+
+;Paraguay-office
+exten => _24XX,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.156.75/${EXTEN},60,TtWw)
+exten => _24XX,n,Hangup
+
+;germany office
+
+exten => _280X,1,Dial(IAX2/sbt-hosted:sbtrading@153.149.152.208/${EXTEN},60,TtWw)
+        same => n,Hangup()
+
+;Ali Hussain
+exten => 9208,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; japan office extension numbers
+;Mussharaf
+exten => 9006,1,Macro(Dial,IAX2,sbphilippines:sB72Ad!n6@61.194.115.115/,${EXTEN},0,,0,,0) ; japan office extension numbers
+
